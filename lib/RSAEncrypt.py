@@ -29,7 +29,7 @@ def _str2key(s):
     return modulus, exponent
 
 
-def encrypt(s,pubkey):
+def encrypt(s, pubkey):
     key = _str2key(pubkey)
     modulus = int(key[0], 16)
     exponent = int(key[1], 16)
