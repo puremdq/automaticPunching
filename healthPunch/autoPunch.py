@@ -1,6 +1,7 @@
 import requests
 import json
 import hashlib
+import time
 
 
 def getToken(username, password):
@@ -28,7 +29,7 @@ def execPunch(res):
 
     payload = "{\"ceNo\":\"" + \
         res.get('userId') + \
-        "\",\"cetDate\":\"20200626\",\"cetTemperature\":\"36.5\"}"
+        "\",\"cetDate\":\""+time.strftime("%Y%m%d", time.localtime())+"\",\"cetTemperature\":\"36.5\"}"
     headers = {
         'Connection': 'keep-alive',
         'Pragma': 'no-cache',
