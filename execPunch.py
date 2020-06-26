@@ -13,7 +13,6 @@ def startFromFile(filename):
 
 
 def start(account):
-    print("account:"+account)
     account = account.split(" ")
     if '2'.endswith(account[2]):
         print(time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) +
