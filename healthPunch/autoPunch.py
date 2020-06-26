@@ -44,9 +44,8 @@ def execPunch(res):
         'Cookie': 'OUTFOX_SEARCH_USER_ID_NCOO=928010709.1547182'
     }
 
-    code = json.loads(requests.request(
-        "POST", url, headers=headers, data=payload).text).get('code')
-    return code == 0
+    return json.loads(requests.request(
+        "POST", url, headers=headers, data=payload).text)
 
 
 def startPunch(username, password):
