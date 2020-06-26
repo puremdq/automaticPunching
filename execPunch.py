@@ -6,7 +6,6 @@ key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgZmNj7QvhbpgdqxN7ZCR+r874KZb/qRvlH
 
 def startFromFile(filename):
     accounts = open(filename, 'r', encoding='utf-8').read().split('\n')
-    print(accounts)
     for account in accounts:
         if account.startswith('#') or len(account) < 1:
             continue
