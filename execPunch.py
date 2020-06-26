@@ -1,8 +1,8 @@
 import healthPunch.autoPunch as autoPunch
 import asst.asstPunch as asstPunch
 import time
+import os
 key = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgZmNj7QvhbpgdqxN7ZCR+r874KZb/qRvlHRieJJREH+i5/hPbpPH5KheEFxoo7nyAkPIcQYPshHvC4UJBe1HrHjdhjFnMA967aebBtioXBOB0qR4ql0DtWA0PrJWtDABeTpPXedqmzMcYIxr1Wq/viIPsjCHRiyRx6mhYqT5P6wIDAQAB"
-
 
 def startFromFile(filename):
     accounts = open(filename, 'r', encoding='utf-8').read().split('\n')
@@ -22,4 +22,4 @@ def start(account):
               " 执行用户:" + account[0] + " 健康打卡 "+str(autoPunch.startPunch('BT7604', 'BT7604')))
 
 
-startFromFile('accounts')
+startFromFile(os.getcwd()+'/accounts')
