@@ -16,10 +16,10 @@ def start(account):
     account = account.split(" ")
     if '2'.endswith(account[2]):
         print(time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) +
-              " 执行小帮手打卡 "+str(asstPunch.startPunch('18580935926', '991458902', key)))
+              " 执行用户:" + account[1]+" 小帮手打卡 "+str(asstPunch.startPunch('18580935926', '991458902', key)))
     if '1'.endswith(account[2]):
         print(time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) +
-              " 执行健康打卡 "+str(autoPunch.startPunch('BT7604', 'BT7604')))
+              " 执行用户:" + account[1] + " 健康打卡 "+str(autoPunch.startPunch('BT7604', 'BT7604')))
 
 
 startFromFile('accounts')
