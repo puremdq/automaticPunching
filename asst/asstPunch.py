@@ -1,14 +1,23 @@
 # import rsaEncrypt
-import sys
-import requests
-import json
 import os
+import json
+import requests
+import sys
 sys.path.append(sys.path[0]+"/..")
 from lib.RSAEncrypt import encrypt
+import asst.SlideVerify as SlideVerify
+
+
+
 def getToken(username, password, publickey):
+
+    slideID = SlideVerify.getSlideid()
+    xpos = SlideVerify.getPicXpos(slideID)
+    SlideVerify.slideverify(slideID, str(xpos))
+
     encryptedPass = encrypt(password, publickey)
     url = "https://asst.cetccloud.com/ncov/login"
-    payload = "------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"mobile\"\r\n\r\n"+username+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" + \
+    payload = "------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"slideID\"\r\n\r\n"+slideID+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"mobile\"\r\n\r\n"+username+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" + \
         encryptedPass+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"client\"\r\n\r\nh5\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs--"
     headers = {
         'Connection': 'keep-alive',
