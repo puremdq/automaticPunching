@@ -11,7 +11,6 @@ def start(account):
         print(time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) +
               " 执行用户:" + account[0]+" 小帮手打卡 "+str(asstPunch.startPunch(account[0], account[1], key)))
         print("")
-        time.sleep(1)
     if '1'.endswith(account[2]):
         print(time.strftime("%Y-%m-%d-%H:%M:%S", time.localtime()) +
               " 执行用户:" + account[0] + " 健康打卡 "+str(autoPunch.startPunch(account[0], account[1])))

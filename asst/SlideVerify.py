@@ -15,14 +15,14 @@ def readImg(url, name):
 
 
 # 查找一个图片再另一个图片的位置
-def FindPic(target, template):
+def findPic(target, template):
     target_rgb = cv2.imread(target)
     target_gray = cv2.cvtColor(target_rgb, cv2.COLOR_BGR2GRAY)
     template_rgb = cv2.imread(template, 0)
     res = cv2.matchTemplate(target_gray, template_rgb, cv2.TM_CCOEFF_NORMED)
     value = cv2.minMaxLoc(res)
-    return value[2]
-    # return value[3]
+    # return value[2]
+    return value[3]
 
 
 # 获取验证码Id
@@ -54,12 +54,16 @@ def getSlideid():
     response = requests.request("POST", url, headers=headers, data=payload)
     return json.loads(response.text.encode('utf8')).get('data').get('slideID')
 
+# 获取滑动校验图片中小图在大图的位置 只需要返回x轴坐标
+
 
 def getPicXpos(slideid):
     timestamp = str(int(round(time.time() * 1000)))
-    point = FindPic(readImg("https://asst.cetccloud.com/oort/oortcloud-sso/slide/v1/"+slideid+"/big.png?"+timestamp, "big.png"),
+    point = findPic(readImg("https://asst.cetccloud.com/oort/oortcloud-sso/slide/v1/"+slideid+"/big.png?"+timestamp, "big.png"),
                     readImg("https://asst.cetccloud.com/oort/oortcloud-sso/slide/v1/"+slideid+"/slice.png?"+timestamp, "slice.png"))
     return point[0]
+
+# 开始滑动校验
 
 
 def slideverify(slideid, xpos):
@@ -85,13 +89,22 @@ def slideverify(slideid, xpos):
         'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
         'Cookie': 'OUTFOX_SEARCH_USER_ID_NCOO=1812329457.9782567; ___rl__test__cookies=1596887578384'
     }
-    
-    response = requests.request("POST", url, headers=headers, data=payload)
-    return response
 
-def execSlideverify():
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return json.loads(response.text)
+
+
+def execSlideverify(username="", times=0):
+
+    if times > 20:
+        print("执行次数已经超过20次，将自动退出")
+        return -1
+
+    print("执行用户 "+username+" 第 "+str(times+1)+" 滑块认证")
     slideid = getSlideid()
     xpos = getPicXpos(slideid)
-    slideverify(slideid, str(xpos))
-
-# execSlideverify()
+    res = slideverify(slideid, str(xpos))
+    if res.get("data") != None:
+        return execSlideverify(username=username, times=times+1)
+    else:
+        return slideid

@@ -1,23 +1,13 @@
 import sys
 sys.path.append(sys.path[0]+"/..")
-import requests
-import json
-import os
-import lib.RSAEncrypt as RSAEncrypt
 import asst.SlideVerify as SlideVerify
+import lib.RSAEncrypt as RSAEncrypt
+import os
+import json
+import requests
 
 
-def getToken(username, password, publickey, count):
-
-    if count > 20:
-        print("重试数量超过20次，将自动退出")
-        return -1
-
-    print("开始执行用户 "+username+" 第 "+str(count+1)+" 次滑块验证")
-
-    slideID = SlideVerify.getSlideid()
-    xpos = SlideVerify.getPicXpos(slideID)
-    SlideVerify.slideverify(slideID, str(xpos))
+def getToken(username, password, slideID, publickey):
 
     encryptedPass = RSAEncrypt.encrypt(password, publickey)
     url = "https://asst.cetccloud.com/ncov/login"
@@ -84,4 +74,5 @@ def execPunch(res):
 
 
 def startPunch(username, password, key):
-    return execPunch(getToken(username, password, key, 0))
+    slideID = SlideVerify.execSlideverify(username)  # 执行滑块认证
+    return execPunch(getToken(username, password, slideID, key))
