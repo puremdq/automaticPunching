@@ -1,21 +1,25 @@
-# import rsaEncrypt
-import os
-import json
-import requests
 import sys
 sys.path.append(sys.path[0]+"/..")
-from lib.RSAEncrypt import encrypt
+import requests
+import json
+import os
+import lib.RSAEncrypt as RSAEncrypt
 import asst.SlideVerify as SlideVerify
 
 
+def getToken(username, password, publickey, count):
 
-def getToken(username, password, publickey):
+    if count > 20:
+        print("重试数量超过20次，将自动退出")
+        return -1
+
+    print("开始执行用户 "+username+" 第 "+str(count+1)+" 次滑块验证")
 
     slideID = SlideVerify.getSlideid()
     xpos = SlideVerify.getPicXpos(slideID)
     SlideVerify.slideverify(slideID, str(xpos))
 
-    encryptedPass = encrypt(password, publickey)
+    encryptedPass = RSAEncrypt.encrypt(password, publickey)
     url = "https://asst.cetccloud.com/ncov/login"
     payload = "------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"slideID\"\r\n\r\n"+slideID+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"mobile\"\r\n\r\n"+username+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" + \
         encryptedPass+"\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs\r\nContent-Disposition: form-data; name=\"client\"\r\n\r\nh5\r\n------WebKitFormBoundaryZmQBeyzFucxQ0qjs--"
@@ -41,7 +45,12 @@ def getToken(username, password, publickey):
     }
 
     response = requests.request("POST", url, headers=headers, data=payload)
-    return json.loads(response.text.encode('utf8')).get('data').get('userInfo')
+
+    if json.loads(response.text.encode('utf8')).get('success'):
+        return json.loads(response.text.encode('utf8')).get('data').get('userInfo')
+    else:
+        print(response.text)
+        return getToken(username, password, publickey, count+1)
 
 
 def execPunch(res):
@@ -75,4 +84,4 @@ def execPunch(res):
 
 
 def startPunch(username, password, key):
-    return execPunch(getToken(username, password, key))
+    return execPunch(getToken(username, password, key, 0))

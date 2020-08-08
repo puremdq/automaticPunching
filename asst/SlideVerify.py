@@ -2,9 +2,9 @@ from cv2 import cv2
 import json
 import requests
 import time
+
+
 # 获取图片
-
-
 def readImg(url, name):
     # 把下载地址发送给requests模块
     f = requests.get(url)
@@ -22,6 +22,7 @@ def FindPic(target, template):
     res = cv2.matchTemplate(target_gray, template_rgb, cv2.TM_CCOEFF_NORMED)
     value = cv2.minMaxLoc(res)
     return value[2]
+    # return value[3]
 
 
 # 获取验证码Id
@@ -84,12 +85,13 @@ def slideverify(slideid, xpos):
         'Accept-Language': 'en-US,en;q=0.9,zh-CN;q=0.8,zh;q=0.7',
         'Cookie': 'OUTFOX_SEARCH_USER_ID_NCOO=1812329457.9782567; ___rl__test__cookies=1596887578384'
     }
-
+    
     response = requests.request("POST", url, headers=headers, data=payload)
-    print("执行滑块验证 "+response.text)
-
+    return response
 
 def execSlideverify():
     slideid = getSlideid()
     xpos = getPicXpos(slideid)
     slideverify(slideid, str(xpos))
+
+# execSlideverify()
