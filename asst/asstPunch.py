@@ -40,7 +40,8 @@ def getToken(username, password, slideID, publickey):
         return json.loads(response.text.encode('utf8')).get('data').get('userInfo')
     else:
         print(response.text)
-        return getToken(username, password, publickey, count+1)
+        #登录失败 重试
+        return getToken(username, password, publickey,publickey)
 
 
 def execPunch(res):
